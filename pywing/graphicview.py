@@ -85,6 +85,8 @@ class GraphicView(QtCore.QObject):
         m_grid = machine_grid(length, width, height, 50)
         self.mgrid_visual = scene.visuals.Line(pos=m_grid, color=(0.8,0.8,0.8,0.5), connect='segments', antialias=True, parent=self.view.scene)
 
+        self.cube = scene.visuals.Cube(edge_color='k', parent=self.view.scene)
+
         self.canvas.events.mouse_press.connect(on_mouse_press)
         self.canvas.events.mouse_move.connect(on_mouse_move)
 
@@ -97,6 +99,21 @@ class GraphicView(QtCore.QObject):
 
         assert(not np.any(np.isnan(path_l)))
         assert(not np.any(np.isnan(path_r)))
+
+        #print(path_r)
+        try :
+            print("R side max X " + str(max(path_r[0])) + " Y " + str(max(path_r[1])) + " Z " + str(max(path_r[2])))
+            print("R side min X " + str(min(path_r[0])) + " Y " + str(min(path_r[1])) + " Z " + str(min(path_r[2])))
+            print("L side max X " + str(max(path_l[0])) + " Y " + str(max(path_l[1])) + " Z " + str(max(path_l[2])))
+            print("L side min X " + str(min(path_l[0])) + " Y " + str(min(path_l[1])) + " Z " + str(min(path_l[2])))
+            print("Zero of the block : X:" + str(min(min(path_r[0]), min(path_l[0])))
+                  + " Y:" + str(min(min(path_r[1]), min(path_l[1])))
+                  + " Z:" + str(min(min(path_r[2]), min(path_l[2]))))
+            print("Size of the block : X:" + str(max(max(path_r[0]), max(path_l[0])) - min(min(path_r[0]), min(path_l[0])))
+                  + " Y:" + str(max(max(path_r[1]), max(path_l[1])) - min(min(path_r[1]), min(path_l[1])))
+                  + " Z:" + str(max(max(path_r[2]), max(path_l[2])) - min(min(path_r[2]), min(path_l[2]))))
+        except :
+            print("empty path")
 
         if path_l.size > 0:
             v, f = triangulate(path_l[::2,1:-1]) # remove lead trajectories and Y axis to triangulate
@@ -123,4 +140,10 @@ class GraphicView(QtCore.QObject):
             faces = np.reshape(faces, (int(faces.size/4), 4))
 
             self.cutting_path.set_data(vertices=vertices, faces=faces)
+
+            length, width, height = self._machine.get_dimensions()
+            m_grid = machine_grid(length, width, height, 50)
+            self.mgrid_visual = scene.visuals.Line(pos=m_grid, color=(0.8, 0.8, 0.8, 0.5), connect='segments',
+                                                   antialias=True, parent=self.view.scene)
+
             # self.camera.set_range()

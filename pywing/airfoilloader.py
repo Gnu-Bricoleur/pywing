@@ -14,7 +14,7 @@ class AirfoilLoader():
             words = line.split()
             try:
                 if len(words) == 2:
-                    points.append((-float(words[0])*100, float(words[1])*100))
+                    points.append((-float(words[0]), float(words[1])))
             except ValueError:
                 pass
 

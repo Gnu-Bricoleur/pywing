@@ -9,7 +9,7 @@ class MachineModel(QtCore.QObject):
     def __init__(self):
         super().__init__()
         self._wire_position = (0.0, 0.0, 0.0, 0.0)
-        self._dimensions = (1000.0, 647.0, 400.0)
+        self._dimensions = (1000.0, 1030.0, 400.0)
 
     def set_wire_position(self, position):
         self._wire_position = position
